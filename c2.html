@@ -14,7 +14,7 @@
             --border-color: #dee2e6;
             --correct-color: #15803d;
             --incorrect-color: #b91c1c;
-            --highlight-bg: #dbeafe; /* Màu highlight mới */
+            --highlight-bg: #dbeafe;
             --highlight-border: #60a5fa;
         }
         *, *::before, *::after {
@@ -128,7 +128,7 @@
         }
 
         /* Quiz Styles */
-        .quiz-setup, .quiz-container, .quiz-results {
+        .quiz-setup, .quiz-container {
             padding: 20px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -228,8 +228,53 @@
             justify-content: space-between;
             margin-top: 25px;
         }
-        .quiz-results { text-align: center; }
+        
+        /* Results and Review Styles */
+        .quiz-results { 
+            text-align: center;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
         .quiz-results h3 { color: var(--primary-color); }
+        .review-section {
+            margin-top: 30px;
+            text-align: left;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        .review-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+        }
+        .review-item.incorrect-review {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+        }
+        .review-item p { margin: 5px 0; }
+        .review-item .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .review-item .user-answer.incorrect-choice {
+            color: var(--incorrect-color);
+            text-decoration: line-through;
+        }
+        .review-item .correct-answer {
+            color: var(--correct-color);
+            font-weight: 500;
+        }
+        .review-item .review-hint {
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f1f3f5;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -250,7 +295,7 @@
         </div>
 
         <div id="theory" class="tab-content active">
-            <h2 data-lang-vi="Phần I: Các Khái Niệm Lý Thuyết Trọng Yếu" data-lang-en="Part I: Key Theoretical Concepts">Phần I: Các Khái Niệm Lý Thuyết Trọng Yếu</h2>
+             <h2 data-lang-vi="Phần I: Các Khái Niệm Lý Thuyết Trọng Yếu" data-lang-en="Part I: Key Theoretical Concepts">Phần I: Các Khái Niệm Lý Thuyết Trọng Yếu</h2>
             <p data-lang-vi="Đây là phần 'gốc rễ', giải thích bản chất của các hệ thống số." data-lang-en="This is the 'root' part, explaining the nature of number systems.">Đây là phần 'gốc rễ', giải thích bản chất của các hệ thống số.</p>
 
             <h3 data-lang-vi="1. Định nghĩa và Phân loại" data-lang-en="1. Definition and Classification">1. Định nghĩa và Phân loại</h3>
@@ -352,7 +397,11 @@ Kết quả cuối cùng: (11110.101)₂
             <div class="quiz-results" id="quiz-results" style="display: none;">
                 <h3 data-lang-vi="Hoàn Thành!" data-lang-en="Completed!">Hoàn Thành!</h3>
                 <p id="score-text"></p>
-                <button id="restart-quiz-btn" class="quiz-setup button" data-lang-vi="Làm lại" data-lang-en="Restart Quiz"></button>
+                <button id="restart-quiz-btn" class="quiz-setup button" data-lang-vi="Làm lại" data-lang-en="Restart Quiz">Làm lại</button>
+                <div class="review-section">
+                    <h4 data-lang-vi="Xem lại bài làm" data-lang-en="Review Your Answers">Xem lại bài làm</h4>
+                    <div id="review-container"></div>
+                </div>
             </div>
         </div>
 
@@ -360,7 +409,6 @@ Kết quả cuối cùng: (11110.101)₂
 
     <script>
         // --- DATA ---
-        // The question data remains the same as provided before.
         const allQuestions = [{"vi":"Đặc điểm nào sau đây là quan trọng nhất của một hệ thống số phụ thuộc vị trí (Positional Number System)?","en":"Which of the following characteristics is the most important for a Positional Number System?","options_vi":["Sử dụng các chữ cái để biểu diễn số.","Giá trị của một chữ số phụ thuộc vào vị trí của nó trong con số.","Giá trị của một số được tính bằng cách cộng tất cả các chữ số lại.","Chỉ sử dụng hai ký hiệu là 0 và 1."],"options_en":["Using letters to represent numbers.","The value of a digit depends on its position within the number.","The value of a number is calculated by adding all its digits.","It only uses two symbols, 0 and 1."],"answer":1,"hint_vi":"Ghi nhớ: 'Phụ thuộc vị trí' có nghĩa là vị trí quyết định giá trị.","hint_en":"Remember: 'Positional' means the position determines the value."},{"vi":"Mục đích chính của việc sử dụng hệ Bát phân (Octal) và Thập lục phân (Hexadecimal) trong khoa học máy tính là gì?","en":"What is the primary purpose of using Octal and Hexadecimal systems in computer science?","options_vi":["Để máy tính có thể thực hiện phép tính nhanh hơn.","Vì chúng là ngôn ngữ mà bộ xử lý (CPU) hiểu trực tiếp.","Cung cấp một cách biểu diễn ngắn gọn, dễ đọc hơn cho các chuỗi nhị phân dài.","Để tiết kiệm không gian lưu trữ trên đĩa cứng."],"options_en":["To allow computers to perform calculations faster.","Because they are the languages that the CPU understands directly.","To provide a shorter, more human-readable representation for long binary strings.","To save storage space on the hard disk."],"answer":2,"hint_vi":"Ghi nhớ: Hex và Octal là 'viết tắt' cho Binary.","hint_en":"Remember: Hex and Octal are 'shorthands' for Binary."},{"vi":"Một 'bit' trong hệ nhị phân là:","en":"A 'bit' in the binary system is:","options_vi":["Một ký hiệu trong hệ thập lục phân.","Một đơn vị đo lường bộ nhớ, tương đương 8 byte.","Đơn vị thông tin nhỏ nhất, có thể là 0 hoặc 1.","Một số có giá trị từ 0 đến 7."],"options_en":["A symbol in the hexadecimal system.","A unit of memory measurement, equivalent to 8 bytes.","The smallest unit of information, which can be either 0 or 1.","A number with a value from 0 to 7."],"answer":2,"hint_vi":"Ghi nhớ: Bit là viết tắt của 'Binary Digit'.","hint_en":"Remember: Bit is short for 'Binary Digit'."},{"vi":"Số nào sau đây KHÔNG hợp lệ trong hệ Bát phân (cơ số 8)?","en":"Which of the following numbers is NOT valid in the Octal system (base 8)?","options_vi":["(123)₈","(707)₈","(81)₈","(10.45)₈"],"options_en":["(123)₈","(707)₈","(81)₈","(10.45)₈"],"answer":2,"hint_vi":"Ghi nhớ: Hệ Bát phân chỉ sử dụng các chữ số từ 0 đến 7.","hint_en":"Remember: The Octal system only uses digits from 0 to 7."},{"vi":"Một chữ số trong hệ Thập lục phân (Hexadecimal) tương đương với bao nhiêu bit trong hệ Nhị phân?","en":"One digit in the Hexadecimal system is equivalent to how many bits in the Binary system?","options_vi":["2 bits","3 bits","4 bits","8 bits"],"options_en":["2 bits","3 bits","4 bits","8 bits"],"answer":2,"hint_vi":"Ghi nhớ: 16 = 2⁴, vì vậy 1 chữ số Hex = 4 bits.","hint_en":"Remember: 16 = 2⁴, so 1 Hex digit = 4 bits."},{"vi":"Trong hệ thập lục phân, ký hiệu 'E' tương đương với giá trị thập phân nào?","en":"In the hexadecimal system, the symbol 'E' is equivalent to which decimal value?","options_vi":["12","13","14","15"],"options_en":["12","13","14","15"],"answer":2,"hint_vi":"Ghi nhớ: A=10, B=11, C=12, D=13, E=14, F=15.","hint_en":"Remember: A=10, B=11, C=12, D=13, E=14, F=15."},{"vi":"Hệ thống số nào sau đây là một ví dụ của hệ không phụ thuộc vị trí (Non-positional)?","en":"Which of the following number systems is an example of a Non-positional system?","options_vi":["Hệ La Mã","Hệ Nhị phân","Hệ Thập phân","Hệ Thập lục phân"],"options_en":["Roman System","Binary System","Decimal System","Hexadecimal System"],"answer":0,"hint_vi":"Ghi nhớ: Trong hệ La Mã, I luôn là 1, V luôn là 5, bất kể vị trí.","hint_en":"Remember: In the Roman system, I is always 1, V is always 5, regardless of position."},{"vi":"Trọng số (place value) của vị trí thứ hai bên trái dấu chấm cơ số trong hệ thập phân là bao nhiêu?","en":"What is the place value of the second position to the left of the radix point in the decimal system?","options_vi":["10⁰","10¹","10²","10⁻²"],"options_en":["10⁰","10¹","10²","10⁻²"],"answer":1,"hint_vi":"Ghi nhớ: Vị trí ngay trước dấu phẩy là 0, sang trái là 1, 2,...","hint_en":"Remember: The position just before the point is 0, to the left it's 1, 2,..."},{"vi":"Quy tắc nào được áp dụng khi chuyển đổi từ hệ Bát phân sang Nhị phân?","en":"Which rule is applied when converting from Octal to Binary?","options_vi":["Nhóm 4 bit nhị phân thành 1 chữ số bát phân.","Thay thế mỗi chữ số bát phân bằng một nhóm 3 bit nhị phân tương ứng.","Thay thế mỗi chữ số bát phân bằng một nhóm 4 bit nhị phân tương ứng.","Chia liên tiếp cho 8 và lấy số dư."],"options_en":["Group 4 binary bits into 1 octal digit.","Replace each octal digit with its corresponding 3-bit binary group.","Replace each octal digit with its corresponding 4-bit binary group.","Repeatedly divide by 8 and take the remainder."],"answer":1,"hint_vi":"Ghi nhớ: 8 = 2³, vì vậy 1 chữ số Bát phân = 3 bits.","hint_en":"Remember: 8 = 2³, so 1 Octal digit = 3 bits."},{"vi":"Số (2G5)₁₆ có phải là một số hợp lệ trong hệ thập lục phân không?","en":"Is the number (2G5)₁₆ a valid number in the hexadecimal system?","options_vi":["Có, vì nó có 3 chữ số.","Không, vì ký hiệu 'G' không tồn tại trong hệ thập lục phân.","Có, vì 'G' là viết tắt của một giá trị lớn.","Không, vì hệ thập lục phân không cho phép số 2."],"options_en":["Yes, because it has 3 digits.","No, because the symbol 'G' does not exist in the hexadecimal system.","Yes, because 'G' is an abbreviation for a large value.","No, because the hexadecimal system does not allow the number 2."],"answer":1,"hint_vi":"Ghi nhớ: Hệ Hex chỉ dùng các ký hiệu từ 0-9 và A-F.","hint_en":"Remember: The Hex system only uses symbols from 0-9 and A-F."},{"vi":"Giá trị thập phân của số nhị phân (11010)₂ là bao nhiêu?","en":"What is the decimal value of the binary number (11010)₂?","options_vi":["25","26","28","30"],"options_en":["25","26","28","30"],"answer":1,"hint_vi":"Tính: (1*16) + (1*8) + (0*4) + (1*2) + (0*1) = 16 + 8 + 2 = 26.","hint_en":"Calculation: (1*16) + (1*8) + (0*4) + (1*2) + (0*1) = 16 + 8 + 2 = 26."},{"vi":"Số bát phân (75)₈ tương đương với số thập phân nào?","en":"The octal number (75)₈ is equivalent to which decimal number?","options_vi":["51","61","75","85"],"options_en":["51","61","75","85"],"answer":1,"hint_vi":"Tính: (7 * 8¹) + (5 * 8⁰) = 56 + 5 = 61.","hint_en":"Calculation: (7 * 8¹) + (5 * 8⁰) = 56 + 5 = 61."},{"vi":"Chuyển số thập lục phân (A4)₁₆ sang hệ thập phân:","en":"Convert the hexadecimal number (A4)₁₆ to decimal:","options_vi":["144","104","164","170"],"options_en":["144","104","164","170"],"answer":2,"hint_vi":"Tính: (A * 16¹) + (4 * 16⁰) = (10 * 16) + 4 = 164.","hint_en":"Calculation: (A * 16¹) + (4 * 16⁰) = (10 * 16) + 4 = 164."},{"vi":"Giá trị của (101.11)₂ trong hệ thập phân là:","en":"The value of (101.11)₂ in the decimal system is:","options_vi":["5.3","5.5","5.75","6.5"],"options_en":["5.3","5.5","5.75","6.5"],"answer":2,"hint_vi":"Tính: (1*4 + 0*2 + 1*1) + (1*0.5 + 1*0.25) = 5 + 0.75 = 5.75.","hint_en":"Calculation: (1*4 + 0*2 + 1*1) + (1*0.5 + 1*0.25) = 5 + 0.75 = 5.75."},{"vi":"Số (123)₈ có giá trị thập phân là:","en":"The number (123)₈ has a decimal value of:","options_vi":["83","123","189","27"],"options_en":["83","123","189","27"],"answer":0,"hint_vi":"Tính: (1 * 8²) + (2 * 8¹) + (3 * 8⁰) = 64 + 16 + 3 = 83.","hint_en":"Calculation: (1 * 8²) + (2 * 8¹) + (3 * 8⁰) = 64 + 16 + 3 = 83."},{"vi":"Số (1F.4)₁₆ tương đương với số thập phân nào?","en":"The number (1F.4)₁₆ is equivalent to which decimal number?","options_vi":["31.25","31.4","30.5","20.4"],"options_en":["31.25","31.4","30.5","20.4"],"answer":0,"hint_vi":"Tính: (1*16 + 15*1) + (4 * 16⁻¹) = 31 + 4/16 = 31.25.","hint_en":"Calculation: (1*16 + 15*1) + (4 * 16⁻¹) = 31 + 4/16 = 31.25."},{"vi":"Số nào lớn hơn: (1111)₂ hay (16)₈?","en":"Which number is larger: (1111)₂ or (16)₈?","options_vi":["(1111)₂ lớn hơn.","(16)₈ lớn hơn.","Hai số bằng nhau.","Không thể so sánh."],"options_en":["(1111)₂ is larger.","(16)₈ is larger.","The two numbers are equal.","Cannot be compared."],"answer":0,"hint_vi":"Đổi về thập phân: (1111)₂ = 15; (16)₈ = 1*8 + 6 = 14. Vậy 15 > 14. Đáp án A là (1111)₂, B là (16)₈. Đáp án đúng phải là A.","hint_en":"Convert to decimal: (1111)₂ = 15; (16)₈ = 1*8 + 6 = 14. So 15 > 14. Option A is (1111)₂, B is (16)₈. The correct answer must be A."},{"vi":"Giá trị thập phân của (C0)₁₆ là:","en":"The decimal value of (C0)₁₆ is:","options_vi":["12","120","180","192"],"options_en":["12","120","180","192"],"answer":3,"hint_vi":"Tính: (C * 16¹) + (0 * 16⁰) = 12 * 16 = 192.","hint_en":"Calculation: (C * 16¹) + (0 * 16⁰) = 12 * 16 = 192."},{"vi":"Chuyển số (405)₈ sang hệ thập phân:","en":"Convert the number (405)₈ to decimal:","options_vi":["261","405","504","251"],"options_en":["261","405","504","251"],"answer":0,"hint_vi":"Tính: (4 * 8²) + (0 * 8¹) + (5 * 8⁰) = 4*64 + 0 + 5 = 256 + 5 = 261.","hint_en":"Calculation: (4 * 8²) + (0 * 8¹) + (5 * 8⁰) = 4*64 + 0 + 5 = 256 + 5 = 261."},{"vi":"(FACE)₁₆ có giá trị thập phân là:","en":"The decimal value of (FACE)₁₆ is:","options_vi":["64206","65535","65534","54321"],"options_en":["64206","65535","65534","54321"],"answer":0,"hint_vi":"Tính: (15*16³) + (10*16²) + (12*16¹) + (14*16⁰) = 61440 + 2560 + 192 + 14 = 64206.","hint_en":"Calculation: (15*16³) + (10*16²) + (12*16¹) + (14*16⁰) = 61440 + 2560 + 192 + 14 = 64206."},{"vi":"Số thập phân 53 khi chuyển sang hệ nhị phân là:","en":"The decimal number 53 when converted to binary is:","options_vi":["110101","101011","110011","111001"],"options_en":["110101","101011","110011","111001"],"answer":0,"hint_vi":"Chia 53 cho 2 liên tiếp và lấy số dư: 53/2=26 dư 1, 26/2=13 dư 0, 13/2=6 dư 1, 6/2=3 dư 0, 3/2=1 dư 1, 1/2=0 dư 1. Đọc ngược: 110101.","hint_en":"Repeatedly divide 53 by 2 and take remainders: 53/2=26 R 1, 26/2=13 R 0, 13/2=6 R 1, 6/2=3 R 0, 3/2=1 R 1, 1/2=0 R 1. Read backwards: 110101."},{"vi":"Số 88 trong hệ thập phân tương đương với số nào trong hệ bát phân?","en":"The number 88 in decimal is equivalent to which number in octal?","options_vi":["(101)₈","(130)₈","(110)₈","(88)₈"],"options_en":["(101)₈","(130)₈","(110)₈","(88)₈"],"answer":1,"hint_vi":"Chia 88 cho 8: 88/8 = 11 dư 0. 11/8 = 1 dư 3. 1/8 = 0 dư 1. Đọc ngược: (130)₈.","hint_en":"Divide 88 by 8: 88/8 = 11 R 0. 11/8 = 1 R 3. 1/8 = 0 R 1. Read backwards: (130)₈."},{"vi":"Chuyển số thập phân 254 sang hệ thập lục phân:","en":"Convert the decimal number 254 to hexadecimal:","options_vi":["(FE)₁₆","(EF)₁₆","(FF)₁₆","(EE)₁₆"],"options_en":["(FE)₁₆","(EF)₁₆","(FF)₁₆","(EE)₁₆"],"answer":0,"hint_vi":"Chia 254 cho 16: 254/16 = 15 dư 14 (E). 15/16 = 0 dư 15 (F). Đọc ngược: (FE)₁₆.","hint_en":"Divide 254 by 16: 254/16 = 15 R 14 (E). 15/16 = 0 R 15 (F). Read backwards: (FE)₁₆."},{"vi":"Biểu diễn nhị phân của số thập phân 0.625 là:","en":"The binary representation of the decimal number 0.625 is:","options_vi":["(0.11)₂","(0.101)₂","(0.011)₂","(0.111)₂"],"options_en":["(0.11)₂","(0.101)₂","(0.011)₂","(0.111)₂"],"answer":1,"hint_vi":"Nhân với 2: 0.625*2=1.25 (lấy 1), 0.25*2=0.5 (lấy 0), 0.5*2=1.0 (lấy 1). Đọc xuôi: 0.101.","hint_en":"Multiply by 2: 0.625*2=1.25 (take 1), 0.25*2=0.5 (take 0), 0.5*2=1.0 (take 1). Read forward: 0.101."},{"vi":"Số thập phân 435 được viết trong hệ thập lục phân là:","en":"The decimal number 435 is written in hexadecimal as:","options_vi":["(1B3)₁₆","(1A3)₁₆","(AB1)₁₆","(13B)₁₆"],"options_en":["(1B3)₁₆","(1A3)₁₆","(AB1)₁₆","(13B)₁₆"],"answer":0,"hint_vi":"Chia 435 cho 16: 435/16 = 27 dư 3. 27/16 = 1 dư 11 (B). 1/16 = 0 dư 1. Đọc ngược: (1B3)₁₆.","hint_en":"Divide 435 by 16: 435/16 = 27 R 3. 27/16 = 1 R 11 (B). 1/16 = 0 R 1. Read backwards: (1B3)₁₆."},{"vi":"Chuyển số nhị phân 111010 sang hệ bát phân:","en":"Convert the binary number 111010 to octal:","options_vi":["(32)₈","(72)₈","(62)₈","(75)₈"],"options_en":["(32)₈","(72)₈","(62)₈","(75)₈"],"answer":1,"hint_vi":"Nhóm 3 bit từ phải sang: 111 010. 111 = 7, 010 = 2. Kết quả: (72)₈.","hint_en":"Group by 3 bits from right to left: 111 010. 111 = 7, 010 = 2. Result: (72)₈."},{"vi":"Chuyển số nhị phân 11010011 sang hệ thập lục phân:","en":"Convert the binary number 11010011 to hexadecimal:","options_vi":["(D3)₁₆","(C3)₁₆","(B3)₁₆","(D4)₁₆"],"options_en":["(D3)₁₆","(C3)₁₆","(B3)₁₆","(D4)₁₆"],"answer":0,"hint_vi":"Nhóm 4 bit từ phải sang: 1101 0011. 1101 = 13 = D, 0011 = 3. Kết quả: (D3)₁₆.","hint_en":"Group by 4 bits from right to left: 1101 0011. 1101 = 13 = D, 0011 = 3. Result: (D3)₁₆."},{"vi":"Số bát phân (247)₈ tương đương với số nhị phân nào?","en":"The octal number (247)₈ is equivalent to which binary number?","options_vi":["010100111","10100111","010101111","1010111"],"options_en":["010100111","10100111","010101111","1010111"],"answer":0,"hint_vi":"Mở rộng từng chữ số: 2 -> 010, 4 -> 100, 7 -> 111. Ghép lại: 010100111.","hint_en":"Expand each digit: 2 -> 010, 4 -> 100, 7 -> 111. Combine them: 010100111."},{"vi":"Số thập lục phân (5D)₁₆ tương đương với số nhị phân nào?","en":"The hexadecimal number (5D)₁₆ is equivalent to which binary number?","options_vi":["01011110","1011101","01011101","1011110"],"options_en":["01011110","1011101","01011101","1011110"],"answer":2,"hint_vi":"Mở rộng từng chữ số: 5 -> 0101, D (13) -> 1101. Ghép lại: 01011101.","hint_en":"Expand each digit: 5 -> 0101, D (13) -> 1101. Combine them: 01011101."},{"vi":"Chuyển (A6)₁₆ sang hệ bát phân (gợi ý: qua trung gian nhị phân):","en":"Convert (A6)₁₆ to octal (hint: use binary as an intermediate):","options_vi":["(246)₈","(426)₈","(256)₈","(516)₈"],"options_en":["(246)₈","(426)₈","(256)₈","(516)₈"],"answer":0,"hint_vi":"(A6)₁₆ -> 1010 0110 (nhị phân). Nhóm 3 bit: 010 100 110 -> 2 4 6. Kết quả: (246)₈.","hint_en":"(A6)₁₆ -> 1010 0110 (binary). Group by 3 bits: 010 100 110 -> 2 4 6. Result: (246)₈."},{"vi":"Chuyển (175)₈ sang hệ thập lục phân:","en":"Convert (175)₈ to hexadecimal:","options_vi":["(7D)₁₆","(D7)₁₆","(7E)₁₆","(6F)₁₆"],"options_en":["(7D)₁₆","(D7)₁₆","(7E)₁₆","(6F)₁₆"],"answer":0,"hint_vi":"(175)₈ -> 001 111 101 (nhị phân). Nhóm 4 bit: 0111 1101 -> 7 D. Kết quả: (7D)₁₆.","hint_en":"(175)₈ -> 001 111 101 (binary). Group by 4 bits: 0111 1101 -> 7 D. Result: (7D)₁₆."},{"vi":"Số nhị phân 1001.1101 tương đương với số thập lục phân nào?","en":"The binary number 1001.1101 is equivalent to which hexadecimal number?","options_vi":["(9.C)₁₆","(8.D)₁₆","(9.D)₁₆","(A.C)₁₆"],"options_en":["(9.C)₁₆","(8.D)₁₆","(9.D)₁₆","(A.C)₁₆"],"answer":2,"hint_vi":"Nhóm 4 bit từ dấu chấm: 1001 . 1101. 1001 = 9, 1101 = D. Kết quả: (9.D)₁₆.","hint_en":"Group by 4 bits from the point: 1001 . 1101. 1001 = 9, 1101 = D. Result: (9.D)₁₆."},{"vi":"Lỗi sai trong phép chuyển đổi (11100)₂ = (70)₈ là gì?","en":"What is the error in the conversion (11100)₂ = (70)₈?","options_vi":["Nhóm bit sai cách (phải nhóm từ trái sang).","Nhóm 11 không đủ 3 bit nên kết quả sai.","Phép chuyển đổi đúng.","Phải nhóm 011 100 để ra (34)₈."],"options_en":["The bits were grouped incorrectly (should group from left to right).","The group 11 doesn't have 3 bits, so the result is wrong.","The conversion is correct.","It should be grouped as 011 100 to get (34)₈."],"answer":3,"hint_vi":"Ghi nhớ: Phải nhóm từ phải sang, thêm 0 vào đầu nếu thiếu. (011)(100)₂ = (34)₈.","hint_en":"Remember: Group from right to left, adding leading zeros if needed. (011)(100)₂ = (34)₈."},{"vi":"Số (3F)₁₆ tương đương với số nào sau đây?","en":"The number (3F)₁₆ is equivalent to which of the following?","options_vi":["(0111111)₂","(77)₈","(63)₁₀","Cả A, B, C đều đúng."],"options_en":["(0111111)₂","(77)₈","(63)₁₀","All A, B, and C are correct."],"answer":3,"hint_vi":"Hãy thử chuyển (3F)₁₆ sang từng hệ: 3=0011, F=1111 -> (00111111)₂. Nhóm 3: (077)₈. Thập phân: 3*16+15 = 63.","hint_en":"Try converting (3F)₁₆ to each base: 3=0011, F=1111 -> (00111111)₂. Group of 3: (077)₈. Decimal: 3*16+15 = 63."},{"vi":"Sắp xếp các số sau theo thứ tự tăng dần: (101)₂, (5)₈, (5)₁₆","en":"Arrange the following numbers in ascending order: (101)₂, (5)₈, (5)₁₆","options_vi":["(101)₂, (5)₈, (5)₁₆","(5)₁₆, (5)₈, (101)₂","(101)₂, (5)₁₆, (5)₈","Tất cả các số bằng nhau."],"options_en":["(101)₂, (5)₈, (5)₁₆","(5)₁₆, (5)₈, (101)₂","(101)₂, (5)₁₆, (5)₈","All numbers are equal."],"answer":3,"hint_vi":"Đổi tất cả về thập phân: (101)₂ = 5, (5)₈ = 5, (5)₁₆ = 5. Vậy chúng bằng nhau.","hint_en":"Convert all to decimal: (101)₂ = 5, (5)₈ = 5, (5)₁₆ = 5. So they are equal."},{"vi":"Giá trị nguyên dương lớn nhất có thể được biểu diễn bằng 10 bit là bao nhiêu?","en":"What is the largest positive integer value that can be represented by 10 bits?","options_vi":["1000","1023","1024","512"],"options_en":["1000","1023","1024","512"],"answer":1,"hint_vi":"Công thức là 2^n - 1. Với n=10, ta có 2^10 - 1 = 1024 - 1 = 1023.","hint_en":"The formula is 2^n - 1. With n=10, we have 2^10 - 1 = 1024 - 1 = 1023."},{"vi":"Cần tối thiểu bao nhiêu bit để biểu diễn số 2000 trong hệ thập phân?","en":"What is the minimum number of bits required to represent the decimal number 2000?","options_vi":["10 bit","11 bit","12 bit","16 bit"],"options_en":["10 bits","11 bits","12 bits","16 bits"],"answer":1,"hint_vi":"Tìm n sao cho 2^(n-1) <= 2000 < 2^n. Ta có 2^10 = 1024 và 2^11 = 2048. Vậy cần 11 bit.","hint_en":"Find n such that 2^(n-1) <= 2000 < 2^n. We have 2^10 = 1024 and 2^11 = 2048. So 11 bits are needed."},{"vi":"Trong mã màu HTML, #FFFFFF biểu diễn màu trắng. FF trong hệ thập lục phân có giá trị thập phân là:","en":"In HTML color codes, #FFFFFF represents white. What is the decimal value of FF in hexadecimal?","options_vi":["15","160","255","256"],"options_en":["15","160","255","256"],"answer":2,"hint_vi":"Tính: (F * 16¹) + (F * 16⁰) = (15 * 16) + (15 * 1) = 240 + 15 = 255.","hint_en":"Calculation: (F * 16¹) + (F * 16⁰) = (15 * 16) + (15 * 1) = 240 + 15 = 255."},{"vi":"Số La Mã XXIX có giá trị thập phân là:","en":"The Roman numeral XXIX has a decimal value of:","options_vi":["19","29","31","39"],"options_en":["19","29","31","39"],"answer":1,"hint_vi":"Phân tích: XX = 20, IX = 9. Cộng lại: 20 + 9 = 29.","hint_en":"Analysis: XX = 20, IX = 9. Add them up: 20 + 9 = 29."},{"vi":"Địa chỉ IP 192.168.1.1 thường được gọi là 'dotted decimal notation'. Đây là một cách biểu diễn rút gọn cho một chuỗi bao nhiêu bit?","en":"The IP address 192.168.1.1 is often called 'dotted decimal notation'. This is a shorthand representation for a string of how many bits?","options_vi":["8 bit","16 bit","32 bit","64 bit"],"options_en":["8 bits","16 bits","32 bits","64 bits"],"answer":2,"hint_vi":"Ghi nhớ: Một địa chỉ IPv4 gồm 4 phần (octet), mỗi phần 8 bit. Tổng cộng 4 * 8 = 32 bit.","hint_en":"Remember: An IPv4 address consists of 4 parts (octets), each being 8 bits. Total is 4 * 8 = 32 bits."}];
         
         // --- STATE ---
@@ -399,11 +447,14 @@ Kết quả cuối cùng: (11110.101)₂
             const scrollY = window.scrollY;
             currentLanguage = (currentLanguage === 'vi') ? 'en' : 'vi';
             allLangElements.forEach(el => {
-                if(el.dataset[currentLanguage]) el.textContent = el.dataset[currentLanguage];
+                if(el.dataset[`lang-${currentLanguage}`]) el.textContent = el.dataset[`lang-${currentLanguage}`];
             });
             if (quizContainer.style.display !== 'none') {
                 displayQuestion();
                 updateScoreDisplay();
+            }
+            if (quizResults.style.display !== 'none') {
+                showResults();
             }
             window.scrollTo(0, scrollY);
         }
@@ -469,7 +520,7 @@ Kết quả cuối cùng: (11110.101)₂
         }
 
         function handleOptionSelect(selectedIndex) {
-            if (userAnswers[currentQuestionIndex] !== null) return; // Already answered
+            if (userAnswers[currentQuestionIndex] !== null) return;
 
             const question = currentQuestions[currentQuestionIndex];
             const isCorrect = selectedIndex === question.answer;
@@ -500,6 +551,8 @@ Kết quả cuối cùng: (11110.101)₂
                     label.classList.add('incorrect');
                 }
             });
+            
+            document.getElementById(`option${selected}`).checked = true;
 
             feedbackEl.style.display = 'block';
             const hintText = question[`hint_${currentLanguage}`];
@@ -527,8 +580,7 @@ Kết quả cuối cùng: (11110.101)₂
             if (currentQuestionIndex >= 0 && currentQuestionIndex < currentQuestions.length) {
                 displayQuestion();
             } else {
-                // This will be called when clicking "Finish"
-                currentQuestionIndex = currentQuestions.length; // to prevent going back
+                currentQuestionIndex = currentQuestions.length; 
                 showResults();
             }
         }
@@ -536,13 +588,74 @@ Kết quả cuối cùng: (11110.101)₂
         function showResults() {
             quizContainer.style.display = 'none';
             quizResults.style.display = 'block';
+
             const score = userAnswers.filter(ans => ans && ans.correct).length;
             const percentage = ((score / currentQuestions.length) * 100).toFixed(1);
+            
             scoreTextEl.textContent = (currentLanguage === 'vi' ? `Bạn đã trả lời đúng ${score} trên ${currentQuestions.length} câu (${percentage}%).` : `You answered ${score} out of ${currentQuestions.length} questions correctly (${percentage}%).`);
+
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = ''; 
+
+            currentQuestions.forEach((question, index) => {
+                const userAnswerData = userAnswers[index];
+                const isCorrect = userAnswerData ? userAnswerData.correct : false;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'review-item';
+                if (!isCorrect) {
+                    itemDiv.classList.add('incorrect-review');
+                }
+
+                const questionTitle = document.createElement('p');
+                questionTitle.className = 'question-title';
+                const questionNumberText = currentLanguage === 'vi' ? 'Câu' : 'Question';
+                questionTitle.innerHTML = `${questionNumberText} ${index + 1}: ${question[currentLanguage]}`;
+
+                let userAnswerText;
+                if (userAnswerData) {
+                    userAnswerText = question[`options_${currentLanguage}`][userAnswerData.selected];
+                } else {
+                    userAnswerText = currentLanguage === 'vi' ? 'Bạn chưa trả lời' : 'You did not answer';
+                }
+                
+                const userAnswerP = document.createElement('p');
+                userAnswerP.className = 'user-answer';
+                if (!isCorrect) {
+                    userAnswerP.classList.add('incorrect-choice');
+                }
+                const youChoseText = currentLanguage === 'vi' ? 'Lựa chọn của bạn' : 'Your choice';
+                userAnswerP.innerHTML = `<strong>${youChoseText}:</strong> ${userAnswerText}`;
+
+                const correctAnswerText = question[`options_${currentLanguage}`][question.answer];
+                const correctAnswerP = document.createElement('p');
+                correctAnswerP.className = 'correct-answer';
+                const correctAnswerLabel = currentLanguage === 'vi' ? 'Đáp án đúng' : 'Correct answer';
+                correctAnswerP.innerHTML = `<strong>${correctAnswerLabel}:</strong> ${correctAnswerText}`;
+                
+                itemDiv.appendChild(questionTitle);
+                itemDiv.appendChild(userAnswerP);
+
+                if (!isCorrect) {
+                    itemDiv.appendChild(correctAnswerP);
+                }
+
+                if (!isCorrect) {
+                    const hintText = question[`hint_${currentLanguage}`];
+                    const hintP = document.createElement('p');
+                    hintP.className = 'review-hint';
+                    const hintLabel = currentLanguage === 'vi' ? 'Gợi ý' : 'Hint';
+                    hintP.innerHTML = `<strong>${hintLabel}:</strong> ${hintText}`;
+                    itemDiv.appendChild(hintP);
+                }
+
+                reviewContainer.appendChild(itemDiv);
+            });
         }
         
         function restartQuiz() {
             quizResults.style.display = 'none';
+            document.getElementById('review-container').innerHTML = '';
             quizSetup.style.display = 'block';
         }
 
