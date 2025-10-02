@@ -3,361 +3,883 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sổ tay Ôn tập CSI</title>
+    <title>Ôn tập Chương 2: Hệ Thống Số</title>
     <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --highlight-bg: #fff3cd;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
         .container {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             margin: 20px auto;
-            padding: 25px 30px;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        h1 {
-            color: #005691;
+        header {
             text-align: center;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 15px;
-            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            margin: 0;
+            color: var(--primary-color);
         }
         .controls {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            font-size: 1.1em;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-        #chapter-select {
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 1em;
-            background-color: #f8f9fa;
+        .lang-switcher {
+            padding: 8px 12px;
+            font-size: 14px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        #content-display {
-            border-top: 1px solid #eee;
-            padding-top: 20px;
+        .lang-switcher:hover {
+            background-color: #5a6268;
         }
-        #content-display h3 {
-            color: #005691;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-            display: inline-block;
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
         }
-        #content-display h4 {
-            color: #17a2b8;
-            font-size: 1.3em;
-            margin-top: 20px;
-            margin-bottom: 10px;
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
         }
-        #content-display ul {
-            padding-left: 20px;
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
         }
-        #content-display li {
-            margin-bottom: 8px;
+        .tab-content {
+            display: none;
         }
-        #content-display strong {
-            color: #dc3545; /* Highlight color */
+        .tab-content.active {
+            display: block;
+        }
+        h2 {
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        .highlight {
+            background-color: var(--highlight-bg);
+            padding: 2px 5px;
+            border-radius: 3px;
             font-weight: 600;
         }
-        #content-display code {
-            background-color: #e9ecef;
-            padding: 2px 6px;
+        .quiz-setup, .quiz-container, .quiz-results {
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        .quiz-setup label {
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        .quiz-setup input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.95em;
         }
-        .welcome-message {
-            text-align: center;
-            color: #6c757d;
+        .quiz-setup button {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .quiz-setup button:hover {
+            background-color: #0056b3;
+        }
+        .question-card {
+            margin-top: 20px;
+        }
+        .question-text {
             font-size: 1.2em;
-            padding: 40px 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
-        .example {
-            background-color: #f8f9fa;
-            border-left: 4px solid #17a2b8;
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .option-label {
+            display: block;
+            background-color: #f1f3f5;
             padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .option-label:hover {
+            border-color: var(--primary-color);
+        }
+        .option-input {
+            display: none;
+        }
+        .option-input:checked + .option-label {
+            border-color: var(--primary-color);
+            background-color: #e7f1ff;
+        }
+        #feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        #feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        #feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .hint {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .quiz-progress {
+            margin-top: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .quiz-results {
+            text-align: center;
+        }
+        .quiz-results h3 {
+            color: var(--primary-color);
+        }
+        #restart-quiz {
+             margin-top: 20px;
+        }
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .tabs {
+                font-size: 14px;
+            }
+            .tab-button {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Sổ tay Ôn tập Lý thuyết CSI</h1>
+        <header>
+            <h1 data-lang-vi="Ôn Tập Chương 2: Hệ Thống Số" data-lang-en="Review Chapter 2: Number Systems">Ôn Tập Chương 2: Hệ Thống Số</h1>
+            <p data-lang-vi="Nền tảng về cách con người và máy tính biểu diễn thông tin." data-lang-en="The foundation of how humans and computers represent information.">Nền tảng về cách con người và máy tính biểu diễn thông tin.</p>
+        </header>
 
         <div class="controls">
-            <label for="chapter-select">Chọn chương để xem:</label>
-            <select id="chapter-select">
-                <option value="0">--- Chọn một chương ---</option>
-                <option value="1">Chương 1: Tổng quan</option>
-                <option value="2">Chương 2: Các hệ đếm</option>
-                <option value="3">Chương 3: Lưu trữ dữ liệu</option>
-                <option value="4">Chương 4: Các phép toán</option>
-                <option value="5">Chương 5: Tổ chức máy tính</option>
-                <option value="6">Chương 6: Mạng máy tính</option>
-            </select>
+            <button class="lang-switcher" id="lang-switcher-btn" data-lang-vi="Translate to English" data-lang-en="Dịch sang Tiếng Việt">Translate to English</button>
         </div>
 
-        <div id="content-display">
-            <div class="welcome-message">
-                <p>Hãy chọn một chương từ menu bên trên để bắt đầu ôn tập.</p>
-                <p>Chúc em thi tốt!</p>
-            </div>
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'theory')" data-lang-vi="Lý Thuyết" data-lang-en="Theory">Lý Thuyết</button>
+            <button class="tab-button" onclick="openTab(event, 'quiz')" data-lang-vi="Trắc Nghiệm" data-lang-en="Quiz">Trắc Nghiệm</button>
         </div>
+
+        <div id="theory" class="tab-content active">
+            <h2 data-lang-vi="Phần I: Các Khái Niệm Lý Thuyết Trọng Yếu" data-lang-en="Part I: Key Theoretical Concepts">Phần I: Các Khái Niệm Lý Thuyết Trọng Yếu</h2>
+            <p data-lang-vi="Đây là phần 'gốc rễ', giải thích bản chất của các hệ thống số." data-lang-en="This is the 'root' part, explaining the nature of number systems.">Đây là phần 'gốc rễ', giải thích bản chất của các hệ thống số.</p>
+
+            <h3 data-lang-vi="1. Định nghĩa và Phân loại Hệ thống số" data-lang-en="1. Definition and Classification of Number Systems">1. Định nghĩa và Phân loại Hệ thống số</h3>
+            <p><strong><span data-lang-vi="Hệ không phụ thuộc vị trí (Non-positional)" data-lang-en="Non-positional System">Hệ không phụ thuộc vị trí (Non-positional)</span>:</strong> <span data-lang-vi="Mỗi ký hiệu có một giá trị cố định. Ví dụ: Hệ La Mã (IX = 9)." data-lang-en="Each symbol has a fixed value. Example: Roman System (IX = 9).">Mỗi ký hiệu có một giá trị cố định. Ví dụ: Hệ La Mã (IX = 9).</span></p>
+            <p><strong><span data-lang-vi="Hệ phụ thuộc vị trí (Positional)" data-lang-en="Positional System">Hệ phụ thuộc vị trí (Positional)</span>:</strong> <span class="highlight" data-lang-vi="Quan trọng nhất. Giá trị của một chữ số được quyết định bởi 2 yếu tố: giá trị của bản thân chữ số và vị trí của nó (trọng số)." data-lang-en="Most important. The value of a digit is determined by two factors: the digit's own value and its position (place value).">Quan trọng nhất. Giá trị của một chữ số được quyết định bởi 2 yếu tố: giá trị của bản thân chữ số và vị trí của nó (trọng số).</span> <span data-lang-vi="Công thức tổng quát:" data-lang-en="General Formula:">Công thức tổng quát:</span> <span class="highlight">Giá trị = Σ (chữ_sốᵢ × cơ_sốⁱ)</span>.</p>
+            
+            <h3 data-lang-vi="2. Bốn Hệ Thống Số Phụ Thuộc Vị Trí Chính" data-lang-en="2. The Four Main Positional Number Systems">2. Bốn Hệ Thống Số Phụ Thuộc Vị Trí Chính</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th data-lang-vi="Tên Hệ Thống" data-lang-en="System Name">Tên Hệ Thống</th>
+                        <th data-lang-vi="Cơ số (Base)" data-lang-en="Base">Cơ số (Base)</th>
+                        <th data-lang-vi="Ký hiệu (Symbols)" data-lang-en="Symbols">Ký hiệu (Symbols)</th>
+                        <th data-lang-vi="Vai trò & Ứng dụng" data-lang-en="Role & Application">Vai trò & Ứng dụng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-lang-vi="Thập phân (Decimal)" data-lang-en="Decimal">Thập phân (Decimal)</td>
+                        <td>10</td>
+                        <td>0, 1, ..., 9</td>
+                        <td data-lang-vi="Hệ tự nhiên của con người." data-lang-en="Natural system for humans.">Hệ tự nhiên của con người.</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-vi="Nhị phân (Binary)" data-lang-en="Binary">Nhị phân (Binary)</td>
+                        <td>2</td>
+                        <td>0, 1 (bit)</td>
+                        <td class="highlight" data-lang-vi="Ngôn ngữ gốc của máy tính. Mọi dữ liệu đều là chuỗi bit." data-lang-en="Native language of computers. All data is a sequence of bits.">Ngôn ngữ gốc của máy tính. Mọi dữ liệu đều là chuỗi bit.</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-vi="Bát phân (Octal)" data-lang-en="Octal">Bát phân (Octal)</td>
+                        <td>8</td>
+                        <td>0, 1, ..., 7</td>
+                        <td data-lang-vi="Cách viết gọn cho nhị phân (1 chữ số bát phân = 3 bit)." data-lang-en="A shorthand for binary (1 octal digit = 3 bits).">Cách viết gọn cho nhị phân (1 chữ số bát phân = 3 bit).</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-vi="Thập lục phân (Hexadecimal)" data-lang-en="Hexadecimal">Thập lục phân (Hexadecimal)</td>
+                        <td>16</td>
+                        <td>0, ..., 9, A, ..., F</td>
+                        <td class="highlight" data-lang-vi="Cách viết gọn hiệu quả nhất cho nhị phân (1 chữ số hex = 4 bit). Dùng trong địa chỉ bộ nhớ, mã màu." data-lang-en="The most efficient shorthand for binary (1 hex digit = 4 bits). Used in memory addresses, color codes.">Cách viết gọn hiệu quả nhất cho nhị phân (1 chữ số hex = 4 bit). Dùng trong địa chỉ bộ nhớ, mã màu.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 data-lang-vi="Phần II: Các Kỹ Năng Thực Hành Cốt Lõi" data-lang-en="Part II: Core Practical Skills">Phần II: Các Kỹ Năng Thực Hành Cốt Lõi</h2>
+            <h3 data-lang-vi="Dạng 1: Chuyển đổi từ Hệ bất kỳ sang Hệ Thập phân (Base b → Base 10)" data-lang-en="Type 1: Convert from Any Base to Decimal (Base b → Base 10)">Dạng 1: Chuyển đổi từ Hệ bất kỳ sang Hệ Thập phân (Base b → Base 10)</h3>
+            <p><b data-lang-vi="Nguyên tắc:" data-lang-en="Principle:">Nguyên tắc:</b> <span class="highlight" data-lang-vi="Áp dụng công thức tổng quát (khai triển theo trọng số)." data-lang-en="Apply the general formula (expansion by place value).">Áp dụng công thức tổng quát (khai triển theo trọng số).</span></p>
+
+            <h3 data-lang-vi="Dạng 2: Chuyển đổi từ Hệ Thập phân sang Hệ bất kỳ (Base 10 → Base b)" data-lang-en="Type 2: Convert from Decimal to Any Base (Base 10 → Base b)">Dạng 2: Chuyển đổi từ Hệ Thập phân sang Hệ bất kỳ (Base 10 → Base b)</h3>
+            <p><b data-lang-vi="Phần Nguyên:" data-lang-en="Integer Part:">Phần Nguyên:</b> <span class="highlight" data-lang-vi="Chia liên tiếp cho cơ số, lấy số dư, đọc từ dưới lên." data-lang-en="Repeatedly divide by the base, take the remainder, read from bottom to top.">Chia liên tiếp cho cơ số, lấy số dư, đọc từ dưới lên.</span></p>
+            <p><b data-lang-vi="Phần Thập Phân:" data-lang-en="Fractional Part:">Phần Thập Phân:</b> <span class="highlight" data-lang-vi="Nhân liên tiếp cho cơ số, lấy phần nguyên, đọc từ trên xuống." data-lang-en="Repeatedly multiply by the base, take the integer part, read from top to bottom.">Nhân liên tiếp cho cơ số, lấy phần nguyên, đọc từ trên xuống.</span></p>
+
+            <h3 data-lang-vi="Dạng 3: Chuyển đổi nhanh giữa Nhị phân ↔ Bát phân ↔ Thập lục phân" data-lang-en="Type 3: Quick Conversion between Binary ↔ Octal ↔ Hexadecimal">Dạng 3: Chuyển đổi nhanh giữa Nhị phân ↔ Bát phân ↔ Thập lục phân</h3>
+            <p><b data-lang-vi="Nguyên tắc:" data-lang-en="Principle:">Nguyên tắc:</b> <span class="highlight" data-lang-vi="Dựa trên quan hệ lũy thừa (8 = 2³ và 16 = 2⁴)." data-lang-en="Based on the power relationship (8 = 2³ and 16 = 2⁴).">Dựa trên quan hệ lũy thừa (8 = 2³ và 16 = 2⁴).</span></p>
+            <ul>
+                <li data-lang-vi="Nhị phân → Bát phân: Nhóm 3 bit." data-lang-en="Binary → Octal: Group by 3 bits.">Nhị phân → Bát phân: Nhóm 3 bit.</li>
+                <li data-lang-vi="Nhị phân → Thập lục phân: Nhóm 4 bit." data-lang-en="Binary → Hexadecimal: Group by 4 bits.">Nhị phân → Thập lục phân: Nhóm 4 bit.</li>
+                <li data-lang-vi="Ngược lại: Mở rộng từng chữ số thành 3 hoặc 4 bit." data-lang-en="Reverse: Expand each digit into 3 or 4 bits.">Ngược lại: Mở rộng từng chữ số thành 3 hoặc 4 bit.</li>
+            </ul>
+        </div>
+
+        <div id="quiz" class="tab-content">
+            <div class="quiz-setup" id="quiz-setup">
+                <label for="num-questions" data-lang-vi="Chọn số lượng câu hỏi:" data-lang-en="Select number of questions:">Chọn số lượng câu hỏi:</label>
+                <input type="number" id="num-questions" value="10" min="1" max="40">
+                <button id="start-quiz-btn" data-lang-vi="Bắt đầu" data-lang-en="Start">Bắt đầu</button>
+            </div>
+
+            <div class="quiz-container" id="quiz-container" style="display: none;">
+                <div class="question-card">
+                    <p class="quiz-progress" id="quiz-progress"></p>
+                    <p class="question-text" id="question-text"></p>
+                    <ul class="options" id="options-list">
+                        </ul>
+                </div>
+                <div id="feedback" style="display: none;"></div>
+                <button id="submit-answer-btn" data-lang-vi="Trả lời" data-lang-en="Submit" style="width: 100%; padding: 15px; margin-top: 20px; font-size: 16px;"></button>
+                <button id="next-question-btn" data-lang-vi="Câu tiếp theo" data-lang-en="Next Question" style="width: 100%; padding: 15px; margin-top: 20px; font-size: 16px; display: none;"></button>
+            </div>
+            
+            <div class="quiz-results" id="quiz-results" style="display: none;">
+                <h3 data-lang-vi="Hoàn Thành!" data-lang-en="Completed!">Hoàn Thành!</h3>
+                <p id="score-text"></p>
+                <button id="restart-quiz-btn" data-lang-vi="Làm lại" data-lang-en="Restart Quiz" class="quiz-setup button"></button>
+            </div>
+
+        </div>
+
     </div>
 
     <script>
-        const theoryData = {
-            "0": `
-                <div class="welcome-message">
-                    <p>Hãy chọn một chương từ menu bên trên để bắt đầu ôn tập.</p>
-                    <p>Nội dung lý thuyết chi tiết sẽ được hiển thị ở đây.</p>
-                </div>
-            `,
-            "1": `
-                <h3>Chương 1: Introduction to Computer Science</h3>
-                <h4>Khái niệm Cốt lõi</h4>
-                <ul>
-                    <li><strong>Mô hình Turing:</strong> Một định nghĩa toán học về máy tính. Nó giới thiệu khái niệm <strong>"máy tính đa năng" (general-purpose machine)</strong>, có khả năng thực hiện bất kỳ phép tính nào nếu được cung cấp một chương trình phù hợp. Cấu trúc cơ bản: <code>Input Data + Program → Computer → Output Data</code>.</li>
-                    <li><strong>Mô hình Von Neumann:</strong> Là kiến trúc máy tính được sử dụng phổ biến nhất hiện nay.
-                        <ul>
-                            <li>Đặc điểm quan trọng nhất: <strong>Stored Program Concept (Khái niệm chương trình được lưu trữ)</strong>. Tức là cả chương trình (tập hợp các lệnh) và dữ liệu đều được lưu trữ trong cùng một bộ nhớ (RAM).</li>
-                            <li><strong>Bốn hệ thống con (Subsystems):</strong>
-                                <ol>
-                                    <li><strong>Memory (Bộ nhớ):</strong> Lưu trữ chương trình và dữ liệu.</li>
-                                    <li><strong>Arithmetic Logic Unit (ALU):</strong> Thực hiện các phép toán số học và logic.</li>
-                                    <li><strong>Control Unit (Khối điều khiển):</strong> Điều khiển hoạt động của các bộ phận khác.</li>
-                                    <li><strong>Input/Output (Nhập/Xuất):</strong> Giao tiếp với thế giới bên ngoài.</li>
-                                </ol>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <h4>Chi tiết Quan trọng</h4>
-                <ul>
-                    <li><strong>Ba thành phần cơ bản của một hệ thống máy tính:</strong>
-                        <ol>
-                            <li><strong>Hardware (Phần cứng):</strong> Các thiết bị vật lý.</li>
-                            <li><strong>Software (Phần mềm):</strong> Các chương trình, bao gồm hệ điều hành và ứng dụng.</li>
-                            <li><strong>Data (Dữ liệu):</strong> Thông tin mà chương trình xử lý.</li>
-                        </ol>
-                    </li>
-                    <li>Lịch sử máy tính được chia thành các thế hệ, đánh dấu bằng các công nghệ chính: Đèn chân không (Gen 1), Transistor (Gen 2), Mạch tích hợp - IC (Gen 3), Vi xử lý (Gen 4), Trí tuệ nhân tạo & Song song (Gen 5).</li>
-                </ul>
-            `,
-            "2": `
-                <h3>Chương 2: Number Systems (Hệ đếm)</h3>
-                <h4>Khái niệm Cốt lõi</h4>
-                <ul>
-                    <li>Máy tính chỉ làm việc với <strong>hệ nhị phân (Binary - base 2)</strong> vì các linh kiện điện tử có hai trạng thái (on/off).</li>
-                    <li>Con người dùng <strong>hệ thập phân (Decimal - base 10)</strong>.</li>
-                    <li>Lập trình viên dùng <strong>hệ thập lục phân (Hexadecimal - base 16)</strong> và <strong>hệ bát phân (Octal - base 8)</strong> để biểu diễn chuỗi bit một cách ngắn gọn.</li>
-                </ul>
-                <h4>Chi tiết Quan trọng & Ví dụ</h4>
-                <ul>
-                    <li><strong>Chuyển từ cơ số bất kỳ sang hệ 10:</strong> Nhân từng chữ số với cơ số mũ vị trí tương ứng.</li>
-                    <div class="example"><strong>Ví dụ (Hexa → Dec):</strong> <code>(1A5)₁₆ = 1 * 16² + A * 16¹ + 5 * 16⁰ = 1 * 256 + 10 * 16 + 5 * 1 = 421</code>.</div>
-                    <li><strong>Chuyển từ hệ 10 sang cơ số bất kỳ (phần nguyên):</strong> Chia liên tiếp cho cơ số và lấy phần dư, đọc ngược lại.</li>
-                    <div class="example"><strong>Ví dụ (Dec → Binary):</strong> Chuyển <code>25</code> sang binary.<br>
-                        <code>25 / 2 = 12</code> dư <code>1</code><br>
-                        <code>12 / 2 = 6</code> dư <code>0</code><br>
-                        <code>6 / 2 = 3</code> dư <code>0</code><br>
-                        <code>3 / 2 = 1</code> dư <code>1</code><br>
-                        <code>1 / 2 = 0</code> dư <code>1</code><br>
-                        Kết quả: <code>(11001)₂</code>.
-                    </div>
-                    <li><strong>Chuyển đổi giữa Binary ↔ Octal ↔ Hexadecimal:</strong> Dựa trên mối quan hệ gom nhóm bit.
-                        <ul>
-                            <li><strong>1 Octal digit = 3 bits:</strong> <code>(725)₈ = (111 010 101)₂</code></li>
-                            <li><strong>1 Hexadecimal digit = 4 bits:</strong> <code>(A2F)₁₆ = (1010 0010 1111)₂</code></li>
-                        </ul>
-                    </li>
-                    <div class="example"><strong>Ví dụ (Binary → Hexa):</strong> Chuyển <code>(1101011)₂</code>.<br>
-                        1. Gom nhóm 4 bit từ phải qua: <code>0110 1011</code> (thêm 0 ở đầu nếu cần).<br>
-                        2. <code>0110 = 6</code>, <code>1011 = 11 = B</code>.<br>
-                        3. Kết quả: <code>(6B)₁₆</code>.
-                    </div>
-                </ul>
-            `,
-            "3": `
-                <h3>Chương 3: Data Storage (Lưu trữ dữ liệu)</h3>
-                <h4>Khái niệm Cốt lõi</h4>
-                <ul>
-                    <li>Tất cả dữ liệu (số, văn bản, ảnh,...) đều được mã hóa thành <strong>chuỗi bit (bit patterns)</strong>.</li>
-                </ul>
-                <h4>Chi tiết Quan trọng</h4>
-                <ul>
-                    <li><strong>Lưu trữ Số nguyên (Integers):</strong>
-                        <ul>
-                            <li><em>Unsigned:</em> Chỉ số không âm. Toàn bộ bit dùng để biểu diễn giá trị.</li>
-                            <li><em>Sign-and-Magnitude:</em> Bit trái nhất là bit dấu (0: dương, 1: âm). Gặp vấn đề với hai biểu diễn của số 0 (+0 và -0).</li>
-                            <li><strong>Two's Complement (Bù 2):</strong> <strong>Phương pháp chuẩn để lưu số nguyên có dấu.</strong>
-                                <ul>
-                                    <li><strong>Cách tìm bù 2 của một số:</strong> Đảo tất cả các bit (tìm bù 1) rồi cộng 1.</li>
-                                    <li>Ưu điểm: Chỉ có một biểu diễn cho số 0, phép trừ trở thành phép cộng.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><strong>Lưu trữ Số thực (Reals) - Floating-Point:</strong>
-                        <ul>
-                            <li>Dựa trên cách biểu diễn khoa học: <code>(-1)^S * M * 2^E</code>.</li>
-                            <li><strong>Tiêu chuẩn IEEE 754</strong> chia chuỗi bit thành 3 phần:
-                                <ol>
-                                    <li><strong>Sign (S):</strong> Dấu của số (1 bit).</li>
-                                    <li><strong>Exponent (E):</strong> Số mũ, được lưu ở dạng "Excess" (thiên vị) để biểu diễn cả số mũ âm và dương.</li>
-                                    <li><strong>Mantissa (M):</strong> Phần định trị (phần thập phân của số khoa học).</li>
-                                </ol>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><strong>Lưu trữ Văn bản (Text):</strong>
-                        <ul>
-                            <li><strong>ASCII:</strong> 7-bit hoặc 8-bit, đủ cho tiếng Anh và các ký tự điều khiển.</li>
-                            <li><strong>Unicode (UTF-8, UTF-16):</strong> Chuẩn quốc tế, có thể biểu diễn mọi ngôn ngữ. UTF-8 là phổ biến nhất trên web.</li>
-                        </ul>
-                    </li>
-                </ul>
-            `,
-            "4": `
-                <h3>Chương 4: Operations on Data (Các phép toán)</h3>
-                <h4>Khái niệm Cốt lõi</h4>
-                <ul>
-                    <li>Các phép toán trong máy tính được thực hiện ở mức bit.</li>
-                </ul>
-                <h4>Chi tiết Quan trọng & Ví dụ</h4>
-                <ul>
-                    <li><strong>1. Phép toán Logic (Logical Operations):</strong>
-                        <ul>
-                            <li>Bao gồm: <code>NOT</code> (đảo bit), <code>AND</code> (chỉ 1 nếu cả hai là 1), <code>OR</code> (chỉ 0 nếu cả hai là 0), <code>XOR</code> (là 1 nếu hai bit khác nhau).</li>
-                            <li><strong>Ứng dụng với mặt nạ (Masking):</strong>
-                                <ul>
-                                    <li><strong>Unset (tắt bit):</strong> <code>data AND 11110111</code> (tắt bit thứ 3 từ phải sang).</li>
-                                    <li><strong>Set (bật bit):</strong> <code>data OR 00001000</code> (bật bit thứ 4 từ phải sang).</li>
-                                    <li><strong>Flip (lật bit):</strong> <code>data XOR 00000001</code> (lật bit cuối cùng).</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><strong>2. Phép toán Dịch chuyển (Shift Operations):</strong>
-                        <ul>
-                            <li><em>Logical Shift (Dịch logic):</em> Dịch bit sang trái/phải, chèn 0 vào chỗ trống.</li>
-                            <li><em>Arithmetic Shift (Dịch số học):</em> Khi dịch phải, <strong>giữ nguyên bit dấu</strong> (bit trái nhất) để bảo toàn giá trị của số âm.</li>
-                            <li><strong>Dịch trái n bit ≈ Nhân 2ⁿ. Dịch phải n bit ≈ Chia 2ⁿ (phần nguyên).</strong></li>
-                        </ul>
-                    </li>
-                    <li><strong>3. Phép toán Số học (Arithmetic Operations):</strong>
-                        <ul>
-                            <li><strong>Cộng/Trừ số Bù 2:</strong> Phép cộng thực hiện như cộng nhị phân bình thường. <strong>Bit nhớ ra khỏi bit trái nhất sẽ bị loại bỏ.</strong></li>
-                            <li><strong>Phép trừ A - B được thực hiện bằng A + (Bù 2 của B).</strong></li>
-                            <li><strong>Overflow (Tràn số):</strong> Xảy ra khi kết quả của phép toán vượt quá phạm vi biểu diễn. Dấu hiệu: cộng 2 số dương ra số âm, hoặc cộng 2 số âm ra số dương.</li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="example"><strong>Ví dụ (Trừ bằng Bù 2, 8-bit):</strong> Tính <code>12 - 5</code><br>
-                    1. <code>12 = 00001100</code><br>
-                    2. <code>5 = 00000101</code><br>
-                    3. Bù 1 của 5 là <code>11111010</code>. Bù 2 của 5 là <code>-5 = 11111011</code>.<br>
-                    4. Thực hiện phép cộng: <code>00001100 (12) + 11111011 (-5) = (1)00000111</code>.<br>
-                    5. Bỏ bit nhớ 1 ở đầu, kết quả là <code>00000111 = 7</code>.
-                </div>
-            `,
-            "5": `
-                <h3>Chương 5: Computer Organization (Tổ chức máy tính)</h3>
-                <h4>Khái niệm Cốt lõi</h4>
-                <ul>
-                    <li>Nghiên cứu cách các thành phần phần cứng được kết nối và phối hợp với nhau để tạo thành một hệ thống máy tính hoạt động.</li>
-                </ul>
-                <h4>Chi tiết Quan trọng</h4>
-                <ul>
-                    <li><strong>Ba hệ thống con (Subsystems):</strong> <strong>CPU</strong>, <strong>Main Memory (RAM)</strong>, và <strong>I/O Subsystem</strong>. Chúng được kết nối qua hệ thống <strong>Bus</strong> (Data Bus, Address Bus, Control Bus).</li>
-                    <li><strong>CPU (Central Processing Unit):</strong>
-                        <ul>
-                            <li><strong>ALU (Arithmetic Logic Unit):</strong> Trung tâm tính toán.</li>
-                            <li><strong>Control Unit (CU):</strong> "Nhạc trưởng" điều khiển luồng dữ liệu và lệnh.</li>
-                            <li><strong>Registers (Thanh ghi):</strong> Các ô nhớ nhỏ, siêu nhanh bên trong CPU.
-                                <ul>
-                                    <li><em>Program Counter (PC):</em> Chứa địa chỉ của lệnh <strong>tiếp theo</strong> sẽ được thực thi.</li>
-                                    <li><em>Instruction Register (IR):</em> Chứa lệnh <strong>hiện tại</strong> đang được thực thi.</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><strong>Chu kỳ máy (Machine Cycle):</strong> Quy trình <strong>Fetch → Decode → Execute</strong> là nền tảng hoạt động của CPU.</li>
-                    <li><strong>Phân cấp bộ nhớ (Memory Hierarchy):</strong>
-                        <ul>
-                            <li>Mục đích: Cân bằng giữa <strong>tốc độ, dung lượng và chi phí</strong>.</li>
-                            <li>Thứ tự từ nhanh đến chậm: <strong>Registers → Cache → RAM → Storage (SSD/HDD).</strong></li>
-                        </ul>
-                    </li>
-                    <li><strong>Kiến trúc tập lệnh:</strong>
-                        <ul>
-                            <li><strong>CISC (Complex Instruction Set Computer):</strong> Tập lệnh phức tạp, một lệnh có thể làm nhiều việc. (VD: Intel x86).</li>
-                            <li><strong>RISC (Reduced Instruction Set Computer):</strong> Tập lệnh rút gọn, đơn giản, tối ưu hóa cho tốc độ. (VD: ARM).</li>
-                        </ul>
-                    </li>
-                </ul>
-            `,
-            "6": `
-                <h3>Chương 6: Computer Networks & Internet</h3>
-                <h4>Khái niệm Cốt lõi</h4>
-                <ul>
-                    <li><strong>Protocol (Giao thức):</strong> Tập hợp các quy tắc mà các thiết bị phải tuân theo để giao tiếp với nhau.</li>
-                    <li><strong>Protocol Layering (Phân tầng giao thức):</strong> Chia nhỏ nhiệm vụ giao tiếp phức tạp thành các tầng (layers) đơn giản hơn, mỗi tầng có một chức năng cụ thể.</li>
-                </ul>
-                <h4>Mô hình TCP/IP (5 lớp)</h4>
-                <ul>
-                    <li><strong>Layer 5 - Application (Ứng dụng):</strong> Cung cấp giao diện và dịch vụ cho người dùng.
-                        <ul><li>Giao thức: <strong>HTTP</strong> (web), <strong>FTP</strong> (truyền file), <strong>SMTP</strong> (email), <strong>DNS</strong> (phân giải tên miền).</li></ul>
-                    </li>
-                    <li><strong>Layer 4 - Transport (Giao vận):</strong> Giao tiếp <strong>end-to-end (process-to-process)</strong>.
-                        <ul>
-                            <li><strong>TCP (Transmission Control Protocol):</strong> <strong>Hướng kết nối, tin cậy</strong>, đảm bảo dữ liệu đến đúng thứ tự và không mất mát.</li>
-                            <li><strong>UDP (User Datagram Protocol):</strong> <strong>Không kết nối, không tin cậy</strong>, ưu tiên tốc độ (dùng cho game, stream).</li>
-                            <li>Sử dụng <strong>Port Numbers</strong> để xác định ứng dụng.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Layer 3 - Network (Mạng):</strong> Chịu trách nhiệm định tuyến (routing) các gói tin qua các mạng khác nhau để đi từ nguồn đến đích (host-to-host).
-                        <ul>
-                            <li>Giao thức chính: <strong>IP (Internet Protocol)</strong>.</li>
-                            <li>Sử dụng <strong>IP Address</strong> để định danh thiết bị trên mạng toàn cầu.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Layer 2 - Data Link (Liên kết dữ liệu):</strong> Truyền dữ liệu trong cùng một mạng cục bộ (LAN), ví dụ từ máy tính đến router (node-to-node).
-                        <ul>
-                            <li>Giao thức: Ethernet.</li>
-                            <li>Sử dụng <strong>MAC Address</strong> (địa chỉ vật lý của card mạng).</li>
-                        </ul>
-                    </li>
-                    <li><strong>Layer 1 - Physical (Vật lý):</strong> Truyền luồng bit thô qua môi trường vật lý (cáp, sóng điện từ).</li>
-                </ul>
-            `
-        };
+        const allQuestions = [
+            // Part 1: Theory
+            {
+                "vi": "Đặc điểm nào sau đây là quan trọng nhất của một hệ thống số phụ thuộc vị trí (Positional Number System)?",
+                "en": "Which of the following characteristics is the most important for a Positional Number System?",
+                "options_vi": ["Sử dụng các chữ cái để biểu diễn số.", "Giá trị của một chữ số phụ thuộc vào vị trí của nó trong con số.", "Giá trị của một số được tính bằng cách cộng tất cả các chữ số lại.", "Chỉ sử dụng hai ký hiệu là 0 và 1."],
+                "options_en": ["Using letters to represent numbers.", "The value of a digit depends on its position within the number.", "The value of a number is calculated by adding all its digits.", "It only uses two symbols, 0 and 1."],
+                "answer": 1,
+                "hint_vi": "Ghi nhớ: 'Phụ thuộc vị trí' có nghĩa là vị trí quyết định giá trị.",
+                "hint_en": "Remember: 'Positional' means the position determines the value."
+            },
+            {
+                "vi": "Mục đích chính của việc sử dụng hệ Bát phân (Octal) và Thập lục phân (Hexadecimal) trong khoa học máy tính là gì?",
+                "en": "What is the primary purpose of using Octal and Hexadecimal systems in computer science?",
+                "options_vi": ["Để máy tính có thể thực hiện phép tính nhanh hơn.", "Vì chúng là ngôn ngữ mà bộ xử lý (CPU) hiểu trực tiếp.", "Cung cấp một cách biểu diễn ngắn gọn, dễ đọc hơn cho các chuỗi nhị phân dài.", "Để tiết kiệm không gian lưu trữ trên đĩa cứng."],
+                "options_en": ["To allow computers to perform calculations faster.", "Because they are the languages that the CPU understands directly.", "To provide a shorter, more human-readable representation for long binary strings.", "To save storage space on the hard disk."],
+                "answer": 2,
+                "hint_vi": "Ghi nhớ: Hex và Octal là 'viết tắt' cho Binary.",
+                "hint_en": "Remember: Hex and Octal are 'shorthands' for Binary."
+            },
+            {
+                "vi": "Một 'bit' trong hệ nhị phân là:",
+                "en": "A 'bit' in the binary system is:",
+                "options_vi": ["Một ký hiệu trong hệ thập lục phân.", "Một đơn vị đo lường bộ nhớ, tương đương 8 byte.", "Đơn vị thông tin nhỏ nhất, có thể là 0 hoặc 1.", "Một số có giá trị từ 0 đến 7."],
+                "options_en": ["A symbol in the hexadecimal system.", "A unit of memory measurement, equivalent to 8 bytes.", "The smallest unit of information, which can be either 0 or 1.", "A number with a value from 0 to 7."],
+                "answer": 2,
+                "hint_vi": "Ghi nhớ: Bit là viết tắt của 'Binary Digit'.",
+                "hint_en": "Remember: Bit is short for 'Binary Digit'."
+            },
+            {
+                "vi": "Số nào sau đây KHÔNG hợp lệ trong hệ Bát phân (cơ số 8)?",
+                "en": "Which of the following numbers is NOT valid in the Octal system (base 8)?",
+                "options_vi": ["(123)₈", "(707)₈", "(81)₈", "(10.45)₈"],
+                "options_en": ["(123)₈", "(707)₈", "(81)₈", "(10.45)₈"],
+                "answer": 2,
+                "hint_vi": "Ghi nhớ: Hệ Bát phân chỉ sử dụng các chữ số từ 0 đến 7.",
+                "hint_en": "Remember: The Octal system only uses digits from 0 to 7."
+            },
+            {
+                "vi": "Một chữ số trong hệ Thập lục phân (Hexadecimal) tương đương với bao nhiêu bit trong hệ Nhị phân?",
+                "en": "One digit in the Hexadecimal system is equivalent to how many bits in the Binary system?",
+                "options_vi": ["2 bits", "3 bits", "4 bits", "8 bits"],
+                "options_en": ["2 bits", "3 bits", "4 bits", "8 bits"],
+                "answer": 2,
+                "hint_vi": "Ghi nhớ: 16 = 2⁴, vì vậy 1 chữ số Hex = 4 bits.",
+                "hint_en": "Remember: 16 = 2⁴, so 1 Hex digit = 4 bits."
+            },
+            {
+                "vi": "Trong hệ thập lục phân, ký hiệu 'E' tương đương với giá trị thập phân nào?",
+                "en": "In the hexadecimal system, the symbol 'E' is equivalent to which decimal value?",
+                "options_vi": ["12", "13", "14", "15"],
+                "options_en": ["12", "13", "14", "15"],
+                "answer": 2,
+                "hint_vi": "Ghi nhớ: A=10, B=11, C=12, D=13, E=14, F=15.",
+                "hint_en": "Remember: A=10, B=11, C=12, D=13, E=14, F=15."
+            },
+            {
+                "vi": "Hệ thống số nào sau đây là một ví dụ của hệ không phụ thuộc vị trí (Non-positional)?",
+                "en": "Which of the following number systems is an example of a Non-positional system?",
+                "options_vi": ["Hệ La Mã", "Hệ Nhị phân", "Hệ Thập phân", "Hệ Thập lục phân"],
+                "options_en": ["Roman System", "Binary System", "Decimal System", "Hexadecimal System"],
+                "answer": 0,
+                "hint_vi": "Ghi nhớ: Trong hệ La Mã, I luôn là 1, V luôn là 5, bất kể vị trí.",
+                "hint_en": "Remember: In the Roman system, I is always 1, V is always 5, regardless of position."
+            },
+            {
+                "vi": "Trọng số (place value) của vị trí thứ hai bên trái dấu chấm cơ số trong hệ thập phân là bao nhiêu?",
+                "en": "What is the place value of the second position to the left of the radix point in the decimal system?",
+                "options_vi": ["10⁰", "10¹", "10²", "10⁻²"],
+                "options_en": ["10⁰", "10¹", "10²", "10⁻²"],
+                "answer": 1,
+                "hint_vi": "Ghi nhớ: Vị trí ngay trước dấu phẩy là 0, sang trái là 1, 2,...",
+                "hint_en": "Remember: The position just before the point is 0, to the left it's 1, 2,..."
+            },
+            {
+                "vi": "Quy tắc nào được áp dụng khi chuyển đổi từ hệ Bát phân sang Nhị phân?",
+                "en": "Which rule is applied when converting from Octal to Binary?",
+                "options_vi": ["Nhóm 4 bit nhị phân thành 1 chữ số bát phân.", "Thay thế mỗi chữ số bát phân bằng một nhóm 3 bit nhị phân tương ứng.", "Thay thế mỗi chữ số bát phân bằng một nhóm 4 bit nhị phân tương ứng.", "Chia liên tiếp cho 8 và lấy số dư."],
+                "options_en": ["Group 4 binary bits into 1 octal digit.", "Replace each octal digit with its corresponding 3-bit binary group.", "Replace each octal digit with its corresponding 4-bit binary group.", "Repeatedly divide by 8 and take the remainder."],
+                "answer": 1,
+                "hint_vi": "Ghi nhớ: 8 = 2³, vì vậy 1 chữ số Bát phân = 3 bits.",
+                "hint_en": "Remember: 8 = 2³, so 1 Octal digit = 3 bits."
+            },
+            {
+                "vi": "Số (2G5)₁₆ có phải là một số hợp lệ trong hệ thập lục phân không?",
+                "en": "Is the number (2G5)₁₆ a valid number in the hexadecimal system?",
+                "options_vi": ["Có, vì nó có 3 chữ số.", "Không, vì ký hiệu 'G' không tồn tại trong hệ thập lục phân.", "Có, vì 'G' là viết tắt của một giá trị lớn.", "Không, vì hệ thập lục phân không cho phép số 2."],
+                "options_en": ["Yes, because it has 3 digits.", "No, because the symbol 'G' does not exist in the hexadecimal system.", "Yes, because 'G' is an abbreviation for a large value.", "No, because the hexadecimal system does not allow the number 2."],
+                "answer": 1,
+                "hint_vi": "Ghi nhớ: Hệ Hex chỉ dùng các ký hiệu từ 0-9 và A-F.",
+                "hint_en": "Remember: The Hex system only uses symbols from 0-9 and A-F."
+            },
+            // Part 2: Conversion to Decimal
+            {
+                "vi": "Giá trị thập phân của số nhị phân (11010)₂ là bao nhiêu?",
+                "en": "What is the decimal value of the binary number (11010)₂?",
+                "options_vi": ["25", "26", "28", "30"],
+                "options_en": ["25", "26", "28", "30"],
+                "answer": 1,
+                "hint_vi": "Tính: (1*16) + (1*8) + (0*4) + (1*2) + (0*1) = 16 + 8 + 2 = 26.",
+                "hint_en": "Calculation: (1*16) + (1*8) + (0*4) + (1*2) + (0*1) = 16 + 8 + 2 = 26."
+            },
+            {
+                "vi": "Số bát phân (75)₈ tương đương với số thập phân nào?",
+                "en": "The octal number (75)₈ is equivalent to which decimal number?",
+                "options_vi": ["51", "61", "75", "85"],
+                "options_en": ["51", "61", "75", "85"],
+                "answer": 1,
+                "hint_vi": "Tính: (7 * 8¹) + (5 * 8⁰) = 56 + 5 = 61.",
+                "hint_en": "Calculation: (7 * 8¹) + (5 * 8⁰) = 56 + 5 = 61."
+            },
+            {
+                "vi": "Chuyển số thập lục phân (A4)₁₆ sang hệ thập phân:",
+                "en": "Convert the hexadecimal number (A4)₁₆ to decimal:",
+                "options_vi": ["144", "104", "164", "170"],
+                "options_en": ["144", "104", "164", "170"],
+                "answer": 2,
+                "hint_vi": "Tính: (A * 16¹) + (4 * 16⁰) = (10 * 16) + 4 = 164.",
+                "hint_en": "Calculation: (A * 16¹) + (4 * 16⁰) = (10 * 16) + 4 = 164."
+            },
+            {
+                "vi": "Giá trị của (101.11)₂ trong hệ thập phân là:",
+                "en": "The value of (101.11)₂ in the decimal system is:",
+                "options_vi": ["5.3", "5.5", "5.75", "6.5"],
+                "options_en": ["5.3", "5.5", "5.75", "6.5"],
+                "answer": 2,
+                "hint_vi": "Tính: (1*4 + 0*2 + 1*1) + (1*0.5 + 1*0.25) = 5 + 0.75 = 5.75.",
+                "hint_en": "Calculation: (1*4 + 0*2 + 1*1) + (1*0.5 + 1*0.25) = 5 + 0.75 = 5.75."
+            },
+            {
+                "vi": "Số (123)₈ có giá trị thập phân là:",
+                "en": "The number (123)₈ has a decimal value of:",
+                "options_vi": ["83", "123", "189", "27"],
+                "options_en": ["83", "123", "189", "27"],
+                "answer": 0,
+                "hint_vi": "Tính: (1 * 8²) + (2 * 8¹) + (3 * 8⁰) = 64 + 16 + 3 = 83.",
+                "hint_en": "Calculation: (1 * 8²) + (2 * 8¹) + (3 * 8⁰) = 64 + 16 + 3 = 83."
+            },
+            {
+                "vi": "Số (1F.4)₁₆ tương đương với số thập phân nào?",
+                "en": "The number (1F.4)₁₆ is equivalent to which decimal number?",
+                "options_vi": ["31.25", "31.4", "30.5", "20.4"],
+                "options_en": ["31.25", "31.4", "30.5", "20.4"],
+                "answer": 0,
+                "hint_vi": "Tính: (1*16 + 15*1) + (4 * 16⁻¹) = 31 + 4/16 = 31.25.",
+                "hint_en": "Calculation: (1*16 + 15*1) + (4 * 16⁻¹) = 31 + 4/16 = 31.25."
+            },
+            {
+                "vi": "Số nào lớn hơn: (1111)₂ hay (16)₈?",
+                "en": "Which number is larger: (1111)₂ or (16)₈?",
+                "options_vi": ["(1111)₂ lớn hơn.", "(16)₈ lớn hơn.", "Hai số bằng nhau.", "Không thể so sánh."],
+                "options_en": ["(1111)₂ is larger.", "(16)₈ is larger.", "The two numbers are equal.", "Cannot be compared."],
+                "answer": 1,
+                "hint_vi": "Đổi về thập phân: (1111)₂ = 15; (16)₈ = 1*8 + 6 = 14. Vậy 15 > 14.",
+                "hint_en": "Convert to decimal: (1111)₂ = 15; (16)₈ = 1*8 + 6 = 14. So 15 > 14."
+            },
+            {
+                "vi": "Giá trị thập phân của (C0)₁₆ là:",
+                "en": "The decimal value of (C0)₁₆ is:",
+                "options_vi": ["12", "120", "180", "192"],
+                "options_en": ["12", "120", "180", "192"],
+                "answer": 3,
+                "hint_vi": "Tính: (C * 16¹) + (0 * 16⁰) = 12 * 16 = 192.",
+                "hint_en": "Calculation: (C * 16¹) + (0 * 16⁰) = 12 * 16 = 192."
+            },
+            {
+                "vi": "Chuyển số (405)₈ sang hệ thập phân:",
+                "en": "Convert the number (405)₈ to decimal:",
+                "options_vi": ["261", "405", "504", "251"],
+                "options_en": ["261", "405", "504", "251"],
+                "answer": 0,
+                "hint_vi": "Tính: (4 * 8²) + (0 * 8¹) + (5 * 8⁰) = 4*64 + 0 + 5 = 256 + 5 = 261.",
+                "hint_en": "Calculation: (4 * 8²) + (0 * 8¹) + (5 * 8⁰) = 4*64 + 0 + 5 = 256 + 5 = 261."
+            },
+            {
+                "vi": "(FACE)₁₆ có giá trị thập phân là:",
+                "en": "The decimal value of (FACE)₁₆ is:",
+                "options_vi": ["64206", "65535", "65534", "54321"],
+                "options_en": ["64206", "65535", "65534", "54321"],
+                "answer": 0,
+                "hint_vi": "Tính: (15*16³) + (10*16²) + (12*16¹) + (14*16⁰) = 61440 + 2560 + 192 + 14 = 64206.",
+                "hint_en": "Calculation: (15*16³) + (10*16²) + (12*16¹) + (14*16⁰) = 61440 + 2560 + 192 + 14 = 64206."
+            },
+            // Part 3: Conversion from Decimal
+            {
+                "vi": "Số thập phân 53 khi chuyển sang hệ nhị phân là:",
+                "en": "The decimal number 53 when converted to binary is:",
+                "options_vi": ["110101", "101011", "110011", "111001"],
+                "options_en": ["110101", "101011", "110011", "111001"],
+                "answer": 0,
+                "hint_vi": "Chia 53 cho 2 liên tiếp và lấy số dư: 53/2=26 dư 1, 26/2=13 dư 0, 13/2=6 dư 1, 6/2=3 dư 0, 3/2=1 dư 1, 1/2=0 dư 1. Đọc ngược: 110101.",
+                "hint_en": "Repeatedly divide 53 by 2 and take remainders: 53/2=26 R 1, 26/2=13 R 0, 13/2=6 R 1, 6/2=3 R 0, 3/2=1 R 1, 1/2=0 R 1. Read backwards: 110101."
+            },
+            {
+                "vi": "Số 88 trong hệ thập phân tương đương với số nào trong hệ bát phân?",
+                "en": "The number 88 in decimal is equivalent to which number in octal?",
+                "options_vi": ["(101)₈", "(130)₈", "(110)₈", "(88)₈"],
+                "options_en": ["(101)₈", "(130)₈", "(110)₈", "(88)₈"],
+                "answer": 1,
+                "hint_vi": "Chia 88 cho 8: 88/8 = 11 dư 0. 11/8 = 1 dư 3. 1/8 = 0 dư 1. Đọc ngược: (130)₈.",
+                "hint_en": "Divide 88 by 8: 88/8 = 11 R 0. 11/8 = 1 R 3. 1/8 = 0 R 1. Read backwards: (130)₈."
+            },
+            {
+                "vi": "Chuyển số thập phân 254 sang hệ thập lục phân:",
+                "en": "Convert the decimal number 254 to hexadecimal:",
+                "options_vi": ["(FE)₁₆", "(EF)₁₆", "(FF)₁₆", "(EE)₁₆"],
+                "options_en": ["(FE)₁₆", "(EF)₁₆", "(FF)₁₆", "(EE)₁₆"],
+                "answer": 0,
+                "hint_vi": "Chia 254 cho 16: 254/16 = 15 dư 14 (E). 15/16 = 0 dư 15 (F). Đọc ngược: (FE)₁₆.",
+                "hint_en": "Divide 254 by 16: 254/16 = 15 R 14 (E). 15/16 = 0 R 15 (F). Read backwards: (FE)₁₆."
+            },
+            {
+                "vi": "Biểu diễn nhị phân của số thập phân 0.625 là:",
+                "en": "The binary representation of the decimal number 0.625 is:",
+                "options_vi": ["(0.11)₂", "(0.101)₂", "(0.011)₂", "(0.111)₂"],
+                "options_en": ["(0.11)₂", "(0.101)₂", "(0.011)₂", "(0.111)₂"],
+                "answer": 1,
+                "hint_vi": "Nhân với 2: 0.625*2=1.25 (lấy 1), 0.25*2=0.5 (lấy 0), 0.5*2=1.0 (lấy 1). Đọc xuôi: 0.101.",
+                "hint_en": "Multiply by 2: 0.625*2=1.25 (take 1), 0.25*2=0.5 (take 0), 0.5*2=1.0 (take 1). Read forward: 0.101."
+            },
+            {
+                "vi": "Số thập phân 435 được viết trong hệ thập lục phân là:",
+                "en": "The decimal number 435 is written in hexadecimal as:",
+                "options_vi": ["(1B3)₁₆", "(1A3)₁₆", "(AB1)₁₆", "(13B)₁₆"],
+                "options_en": ["(1B3)₁₆", "(1A3)₁₆", "(AB1)₁₆", "(13B)₁₆"],
+                "answer": 0,
+                "hint_vi": "Chia 435 cho 16: 435/16 = 27 dư 3. 27/16 = 1 dư 11 (B). 1/16 = 0 dư 1. Đọc ngược: (1B3)₁₆.",
+                "hint_en": "Divide 435 by 16: 435/16 = 27 R 3. 27/16 = 1 R 11 (B). 1/16 = 0 R 1. Read backwards: (1B3)₁₆."
+            },
+            // Part 4: Quick Conversions
+            {
+                "vi": "Chuyển số nhị phân 111010 sang hệ bát phân:",
+                "en": "Convert the binary number 111010 to octal:",
+                "options_vi": ["(32)₈", "(72)₈", "(62)₈", "(75)₈"],
+                "options_en": ["(32)₈", "(72)₈", "(62)₈", "(75)₈"],
+                "answer": 1,
+                "hint_vi": "Nhóm 3 bit từ phải sang: 111 010. 111 = 7, 010 = 2. Kết quả: (72)₈.",
+                "hint_en": "Group by 3 bits from right to left: 111 010. 111 = 7, 010 = 2. Result: (72)₈."
+            },
+            {
+                "vi": "Chuyển số nhị phân 11010011 sang hệ thập lục phân:",
+                "en": "Convert the binary number 11010011 to hexadecimal:",
+                "options_vi": ["(D3)₁₆", "(C3)₁₆", "(B3)₁₆", "(D4)₁₆"],
+                "options_en": ["(D3)₁₆", "(C3)₁₆", "(B3)₁₆", "(D4)₁₆"],
+                "answer": 0,
+                "hint_vi": "Nhóm 4 bit từ phải sang: 1101 0011. 1101 = 13 = D, 0011 = 3. Kết quả: (D3)₁₆.",
+                "hint_en": "Group by 4 bits from right to left: 1101 0011. 1101 = 13 = D, 0011 = 3. Result: (D3)₁₆."
+            },
+            {
+                "vi": "Số bát phân (247)₈ tương đương với số nhị phân nào?",
+                "en": "The octal number (247)₈ is equivalent to which binary number?",
+                "options_vi": ["010100111", "10100111", "010101111", "1010111"],
+                "options_en": ["010100111", "10100111", "010101111", "1010111"],
+                "answer": 0,
+                "hint_vi": "Mở rộng từng chữ số: 2 -> 010, 4 -> 100, 7 -> 111. Ghép lại: 010100111.",
+                "hint_en": "Expand each digit: 2 -> 010, 4 -> 100, 7 -> 111. Combine them: 010100111."
+            },
+            {
+                "vi": "Số thập lục phân (5D)₁₆ tương đương với số nhị phân nào?",
+                "en": "The hexadecimal number (5D)₁₆ is equivalent to which binary number?",
+                "options_vi": ["01011110", "1011101", "01011101", "1011110"],
+                "options_en": ["01011110", "1011101", "01011101", "1011110"],
+                "answer": 2,
+                "hint_vi": "Mở rộng từng chữ số: 5 -> 0101, D (13) -> 1101. Ghép lại: 01011101.",
+                "hint_en": "Expand each digit: 5 -> 0101, D (13) -> 1101. Combine them: 01011101."
+            },
+            {
+                "vi": "Chuyển (A6)₁₆ sang hệ bát phân (gợi ý: qua trung gian nhị phân):",
+                "en": "Convert (A6)₁₆ to octal (hint: use binary as an intermediate):",
+                "options_vi": ["(246)₈", "(426)₈", "(256)₈", "(516)₈"],
+                "options_en": ["(246)₈", "(426)₈", "(256)₈", "(516)₈"],
+                "answer": 0,
+                "hint_vi": "(A6)₁₆ -> 1010 0110 (nhị phân). Nhóm 3 bit: 010 100 110 -> 2 4 6. Kết quả: (246)₈.",
+                "hint_en": "(A6)₁₆ -> 1010 0110 (binary). Group by 3 bits: 010 100 110 -> 2 4 6. Result: (246)₈."
+            },
+            {
+                "vi": "Chuyển (175)₈ sang hệ thập lục phân:",
+                "en": "Convert (175)₈ to hexadecimal:",
+                "options_vi": ["(7D)₁₆", "(D7)₁₆", "(7E)₁₆", "(6F)₁₆"],
+                "options_en": ["(7D)₁₆", "(D7)₁₆", "(7E)₁₆", "(6F)₁₆"],
+                "answer": 0,
+                "hint_vi": "(175)₈ -> 001 111 101 (nhị phân). Nhóm 4 bit: 0111 1101 -> 7 D. Kết quả: (7D)₁₆.",
+                "hint_en": "(175)₈ -> 001 111 101 (binary). Group by 4 bits: 0111 1101 -> 7 D. Result: (7D)₁₆."
+            },
+            {
+                "vi": "Số nhị phân 1001.1101 tương đương với số thập lục phân nào?",
+                "en": "The binary number 1001.1101 is equivalent to which hexadecimal number?",
+                "options_vi": ["(9.C)₁₆", "(8.D)₁₆", "(9.D)₁₆", "(A.C)₁₆"],
+                "options_en": ["(9.C)₁₆", "(8.D)₁₆", "(9.D)₁₆", "(A.C)₁₆"],
+                "answer": 2,
+                "hint_vi": "Nhóm 4 bit từ dấu chấm: 1001 . 1101. 1001 = 9, 1101 = D. Kết quả: (9.D)₁₆.",
+                "hint_en": "Group by 4 bits from the point: 1001 . 1101. 1001 = 9, 1101 = D. Result: (9.D)₁₆."
+            },
+            {
+                "vi": "Lỗi sai trong phép chuyển đổi (11100)₂ = (70)₈ là gì?",
+                "en": "What is the error in the conversion (11100)₂ = (70)₈?",
+                "options_vi": ["Nhóm bit sai cách (phải nhóm từ trái sang).", "Nhóm 11 không đủ 3 bit nên kết quả sai.", "Phép chuyển đổi đúng.", "Phải nhóm 011 100 để ra (34)₈."],
+                "options_en": ["The bits were grouped incorrectly (should group from left to right).", "The group 11 doesn't have 3 bits, so the result is wrong.", "The conversion is correct.", "It should be grouped as 011 100 to get (34)₈."],
+                "answer": 3,
+                "hint_vi": "Ghi nhớ: Phải nhóm từ phải sang, thêm 0 vào đầu nếu thiếu. (011)(100)₂ = (34)₈.",
+                "hint_en": "Remember: Group from right to left, adding leading zeros if needed. (011)(100)₂ = (34)₈."
+            },
+            {
+                "vi": "Số (3F)₁₆ tương đương với số nào sau đây?",
+                "en": "The number (3F)₁₆ is equivalent to which of the following?",
+                "options_vi": ["(0111111)₂", "(77)₈", "(63)₁₀", "Cả A, B, C đều đúng."],
+                "options_en": ["(0111111)₂", "(77)₈", "(63)₁₀", "All A, B, and C are correct."],
+                "answer": 3,
+                "hint_vi": "Hãy thử chuyển (3F)₁₆ sang từng hệ: 3=0011, F=1111 -> (00111111)₂. Nhóm 3: (077)₈. Thập phân: 3*16+15 = 63.",
+                "hint_en": "Try converting (3F)₁₆ to each base: 3=0011, F=1111 -> (00111111)₂. Group of 3: (077)₈. Decimal: 3*16+15 = 63."
+            },
+            {
+                "vi": "Sắp xếp các số sau theo thứ tự tăng dần: (101)₂, (5)₈, (5)₁₆",
+                "en": "Arrange the following numbers in ascending order: (101)₂, (5)₈, (5)₁₆",
+                "options_vi": ["(101)₂, (5)₈, (5)₁₆", "(5)₁₆, (5)₈, (101)₂", "(101)₂, (5)₁₆, (5)₈", "Tất cả các số bằng nhau."],
+                "options_en": ["(101)₂, (5)₈, (5)₁₆", "(5)₁₆, (5)₈, (101)₂", "(101)₂, (5)₁₆, (5)₈", "All numbers are equal."],
+                "answer": 3,
+                "hint_vi": "Đổi tất cả về thập phân: (101)₂ = 5, (5)₈ = 5, (5)₁₆ = 5. Vậy chúng bằng nhau.",
+                "hint_en": "Convert all to decimal: (101)₂ = 5, (5)₈ = 5, (5)₁₆ = 5. So they are equal."
+            },
+            // Part 5: Advanced
+            {
+                "vi": "Giá trị nguyên dương lớn nhất có thể được biểu diễn bằng 10 bit là bao nhiêu?",
+                "en": "What is the largest positive integer value that can be represented by 10 bits?",
+                "options_vi": ["1000", "1023", "1024", "512"],
+                "options_en": ["1000", "1023", "1024", "512"],
+                "answer": 1,
+                "hint_vi": "Công thức là 2^n - 1. Với n=10, ta có 2^10 - 1 = 1024 - 1 = 1023.",
+                "hint_en": "The formula is 2^n - 1. With n=10, we have 2^10 - 1 = 1024 - 1 = 1023."
+            },
+            {
+                "vi": "Cần tối thiểu bao nhiêu bit để biểu diễn số 2000 trong hệ thập phân?",
+                "en": "What is the minimum number of bits required to represent the decimal number 2000?",
+                "options_vi": ["10 bit", "11 bit", "12 bit", "16 bit"],
+                "options_en": ["10 bits", "11 bits", "12 bits", "16 bits"],
+                "answer": 1,
+                "hint_vi": "Tìm n sao cho 2^(n-1) <= 2000 < 2^n. Ta có 2^10 = 1024 và 2^11 = 2048. Vậy cần 11 bit.",
+                "hint_en": "Find n such that 2^(n-1) <= 2000 < 2^n. We have 2^10 = 1024 and 2^11 = 2048. So 11 bits are needed."
+            },
+            {
+                "vi": "Trong mã màu HTML, #FFFFFF biểu diễn màu trắng. FF trong hệ thập lục phân có giá trị thập phân là:",
+                "en": "In HTML color codes, #FFFFFF represents white. What is the decimal value of FF in hexadecimal?",
+                "options_vi": ["15", "160", "255", "256"],
+                "options_en": ["15", "160", "255", "256"],
+                "answer": 2,
+                "hint_vi": "Tính: (F * 16¹) + (F * 16⁰) = (15 * 16) + (15 * 1) = 240 + 15 = 255.",
+                "hint_en": "Calculation: (F * 16¹) + (F * 16⁰) = (15 * 16) + (15 * 1) = 240 + 15 = 255."
+            },
+            {
+                "vi": "Số La Mã XXIX có giá trị thập phân là:",
+                "en": "The Roman numeral XXIX has a decimal value of:",
+                "options_vi": ["19", "29", "31", "39"],
+                "options_en": ["19", "29", "31", "39"],
+                "answer": 1,
+                "hint_vi": "Phân tích: XX = 20, IX = 9. Cộng lại: 20 + 9 = 29.",
+                "hint_en": "Analysis: XX = 20, IX = 9. Add them up: 20 + 9 = 29."
+            },
+            {
+                "vi": "Địa chỉ IP 192.168.1.1 thường được gọi là 'dotted decimal notation'. Đây là một cách biểu diễn rút gọn cho một chuỗi bao nhiêu bit?",
+                "en": "The IP address 192.168.1.1 is often called 'dotted decimal notation'. This is a shorthand representation for a string of how many bits?",
+                "options_vi": ["8 bit", "16 bit", "32 bit", "64 bit"],
+                "options_en": ["8 bits", "16 bits", "32 bits", "64 bits"],
+                "answer": 2,
+                "hint_vi": "Ghi nhớ: Một địa chỉ IPv4 gồm 4 phần (octet), mỗi phần 8 bit. Tổng cộng 4 * 8 = 32 bit.",
+                "hint_en": "Remember: An IPv4 address consists of 4 parts (octets), each being 8 bits. Total is 4 * 8 = 32 bits."
+            }
+        ];
 
-        const chapterSelect = document.getElementById('chapter-select');
-        const contentDisplay = document.getElementById('content-display');
+        let currentLanguage = 'vi';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
 
-        function updateContent() {
-            const selectedChapter = chapterSelect.value;
-            contentDisplay.innerHTML = theoryData[selectedChapter];
+        // --- DOM Elements ---
+        const langSwitcherBtn = document.getElementById('lang-switcher-btn');
+        const allLangElements = document.querySelectorAll('[data-lang-vi]');
+        
+        const quizSetup = document.getElementById('quiz-setup');
+        const quizContainer = document.getElementById('quiz-container');
+        const quizResults = document.getElementById('quiz-results');
+        
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const numQuestionsInput = document.getElementById('num-questions');
+
+        const questionTextEl = document.getElementById('question-text');
+        const optionsListEl = document.getElementById('options-list');
+        const feedbackEl = document.getElementById('feedback');
+        const progressEl = document.getElementById('quiz-progress');
+        const scoreTextEl = document.getElementById('score-text');
+
+        const submitBtn = document.getElementById('submit-answer-btn');
+        const nextBtn = document.getElementById('next-question-btn');
+        const restartBtn = document.getElementById('restart-quiz-btn');
+
+        // --- Functions ---
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
 
-        chapterSelect.addEventListener('change', updateContent);
-    </script>
+        function switchLanguage() {
+            const scrollY = window.scrollY;
+            currentLanguage = (currentLanguage === 'vi') ? 'en' : 'vi';
+            
+            allLangElements.forEach(el => {
+                el.textContent = el.dataset[`lang-${currentLanguage}`];
+            });
 
+            // Update quiz if active
+            if (quizContainer.style.display !== 'none') {
+                displayQuestion();
+            }
+            window.scrollTo(0, scrollY);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function startQuiz() {
+            const num = parseInt(numQuestionsInput.value, 10);
+            if (num > 0 && num <= allQuestions.length) {
+                currentQuestions = shuffleArray([...allQuestions]).slice(0, num);
+                currentQuestionIndex = 0;
+                score = 0;
+                
+                quizSetup.style.display = 'none';
+                quizResults.style.display = 'none';
+                quizContainer.style.display = 'block';
+                
+                displayQuestion();
+            } else {
+                alert(currentLanguage === 'vi' ? `Vui lòng chọn số câu hỏi từ 1 đến ${allQuestions.length}` : `Please select a number of questions between 1 and ${allQuestions.length}`);
+            }
+        }
+
+        function displayQuestion() {
+            feedbackEl.style.display = 'none';
+            submitBtn.style.display = 'block';
+            nextBtn.style.display = 'none';
+
+            const question = currentQuestions[currentQuestionIndex];
+            questionTextEl.textContent = question[currentLanguage];
+            
+            const options = currentLanguage === 'vi' ? question.options_vi : question.options_en;
+            optionsListEl.innerHTML = '';
+            options.forEach((option, index) => {
+                const li = document.createElement('li');
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'option';
+                input.id = `option${index}`;
+                input.value = index;
+                input.className = 'option-input';
+                
+                const label = document.createElement('label');
+                label.htmlFor = `option${index}`;
+                label.textContent = option;
+                label.className = 'option-label';
+
+                li.appendChild(input);
+                li.appendChild(label);
+                optionsListEl.appendChild(li);
+            });
+            
+            progressEl.textContent = (currentLanguage === 'vi' ? `Câu ${currentQuestionIndex + 1} / ${currentQuestions.length}` : `Question ${currentQuestionIndex + 1} / ${currentQuestions.length}`);
+        }
+
+        function handleSubmit() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (!selectedOption) {
+                alert(currentLanguage === 'vi' ? 'Vui lòng chọn một đáp án!' : 'Please select an answer!');
+                return;
+            }
+
+            const answerIndex = parseInt(selectedOption.value, 10);
+            const question = currentQuestions[currentQuestionIndex];
+            const correct = answerIndex === question.answer;
+
+            feedbackEl.style.display = 'block';
+            feedbackEl.innerHTML = '';
+
+            if (correct) {
+                score++;
+                feedbackEl.textContent = currentLanguage === 'vi' ? 'Chính xác! 🎉' : 'Correct! 🎉';
+                feedbackEl.className = 'correct';
+            } else {
+                feedbackEl.className = 'incorrect';
+                const correctAnswerText = currentLanguage === 'vi' ? question.options_vi[question.answer] : question.options_en[question.answer];
+                const hintText = currentLanguage === 'vi' ? question.hint_vi : question.hint_en;
+                feedbackEl.innerHTML = `
+                    <strong data-lang-vi="Sai rồi!" data-lang-en="Incorrect!">${currentLanguage === 'vi' ? 'Sai rồi!' : 'Incorrect!'}</strong>
+                    <br>
+                    <span data-lang-vi="Đáp án đúng là:" data-lang-en="The correct answer is:">${currentLanguage === 'vi' ? 'Đáp án đúng là:' : 'The correct answer is:'}</span> ${correctAnswerText}
+                    <div class="hint">${hintText}</div>
+                `;
+            }
+            
+            submitBtn.style.display = 'none';
+            nextBtn.style.display = 'block';
+        }
+
+        function handleNext() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+        
+        function showResults() {
+            quizContainer.style.display = 'none';
+            quizResults.style.display = 'block';
+            const percentage = ((score / currentQuestions.length) * 100).toFixed(2);
+            scoreTextEl.textContent = (currentLanguage === 'vi' ? `Bạn đã trả lời đúng ${score} trên ${currentQuestions.length} câu (${percentage}%).` : `You answered ${score} out of ${currentQuestions.length} questions correctly (${percentage}%).`);
+        }
+        
+        function restartQuiz() {
+            quizResults.style.display = 'none';
+            quizSetup.style.display = 'block';
+        }
+
+        // --- Event Listeners ---
+        langSwitcherBtn.addEventListener('click', switchLanguage);
+        startQuizBtn.addEventListener('click', startQuiz);
+        submitBtn.addEventListener('click', handleSubmit);
+        nextBtn.addEventListener('click', handleNext);
+        restartBtn.addEventListener('click', restartQuiz);
+
+    </script>
 </body>
 </html>
